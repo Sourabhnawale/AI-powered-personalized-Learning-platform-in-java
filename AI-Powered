@@ -1,1 +1,117 @@
+import java.util.*;
+
+class User {
+    String name;
+    String email;
+    Map<String, Integer> progress; // Course name and completion percentage
+
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+        this.progress = new HashMap<>();
+    }
+
+    public void updateProgress(String course, int percentage) {
+        progress.put(course, percentage);
+    }
+
+    public Map<String, Integer> getProgress() {
+        return progress;
+    }
+}
+
+class Course {
+    String name;
+    String description;
+
+    public Course(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Course: " + name + "\nDescription: " + description;
+    }
+}
+
+class LearningPlatform {
+    Map<String, User> users;
+    List<Course> courses;
+
+    public LearningPlatform() {
+        users = new HashMap<>();
+        courses = new ArrayList<>();
+    }
+
+    public void registerUser(String name, String email) {
+        if (users.containsKey(email)) {
+            System.out.println("User already registered!");
+        } else {
+            users.put(email, new User(name, email));
+            System.out.println("User registered successfully!");
+        }
+    }
+
+    public void addCourse(String name, String description) {
+        courses.add(new Course(name, description));
+    }
+
+    public void updateProgress(String email, String course, int percentage) {
+        User user = users.get(email);
+        if (user != null) {
+            user.updateProgress(course, percentage);
+            System.out.println("Progress updated for " + course);
+        } else {
+            System.out.println("User not found!");
+        }
+    }
+
+    public void recommendCourses(String email) {
+        User user = users.get(email);
+        if (user != null) {
+            System.out.println("Recommended courses for " + user.name + ":");
+            for (Course course : courses) {
+                if (!user.getProgress().containsKey(course.name) || user.getProgress().get(course.name) < 50) {
+                    System.out.println("- " + course.name);
+                }
+            }
+        } else {
+            System.out.println("User not found!");
+        }
+    }
+
+    public void showCourses() {
+        System.out.println("Available Courses:");
+        for (Course course : courses) {
+            System.out.println(course);
+        }
+    }
+}
+
+public class PersonalizedLearningPlatform {
+    public static void main(String[] args) {
+        LearningPlatform platform = new LearningPlatform();
+
+        // Add sample courses
+        platform.addCourse("Java Basics", "Learn the fundamentals of Java programming.");
+        platform.addCourse("Data Structures", "Understand core data structures.");
+        platform.addCourse("Machine Learning", "Introduction to ML concepts and algorithms.");
+
+        // Register users
+        platform.registerUser("Alice", "alice@example.com");
+        platform.registerUser("Bob", "bob@example.com");
+
+        // Update user progress
+        platform.updateProgress("alice@example.com", "Java Basics", 80);
+        platform.updateProgress("alice@example.com", "Data Structures", 30);
+
+        // Show all courses
+        platform.showCourses();
+
+        // Recommend courses
+        platform.recommendCourses("alice@example.com");
+        platform.recommendCourses("bob@example.com");
+    }
+}
 
